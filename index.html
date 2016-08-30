@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es-mx">
+
+<head>
+    <meta charset="utf-8">
+    <title>jQuery, Web Services con JSON</title>
+    <style type="text/css">
+        .cuadro {
+            display: inline-block;
+            vertical-align: top;
+            width: 300px;
+        }
+    </style>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript">
+            // Se carga el documento con el contenido principal.
+            $(document).ready(main);
+            // Se define la funcionalidad principal.
+            function main(){
+                // Se ejecuta la búsqueda de imagénes sobre el evento clic del botón.
+                $('#btn-search').click(function(e){
+                    // Se declara e incializa la cadena de texto.
+                    var text = '';
+                    // Se asigna el valor del campo de búsqueda.
+                    var tag = $('#txt-search').val();
+                    // Se imprime un mensaje de texto por defecto dentro del contenedor al realizar la búsqueda.
+                    $('#container').text('Cargando...');
+                    // Se obtienen los registros del JSON remoto.
+                    $.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?tags=' + tag + '&tagmode=any&format=json&jsoncallback=?', function(data){
+                        // Se itera y filtra cada registro del archivo.
+                        $.each(data.items, function(i, item){
+                            // Se almacena y concatena cada registro filtrado.
+                            text += '<div class="cuadro">'
+                                 + '<h2>' + item.title + '</h2>'
+                                 + '<p>' + item.description + '</p>'
+                                 //+ '<img src="' + item.media.m + '" />'
+                                 + '</div>';
+                        });
+                        // Se imprimen todos los registros en formato HTML dentro del contenedor.
+                        $('#container').html(text);
+                    });
+                });
+            }
+        </script>
+</head>
+
+<body>
+    <input type="text" id="txt-search">
+    <input type="button" id="btn-search" value="Buscar">
+    <section id="container"></section>
+</body>
+
+</html>
